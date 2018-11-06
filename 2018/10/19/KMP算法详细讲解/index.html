@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+<html lang="">
+    <!-- title -->
+
+
+
+
+<!-- keywords -->
+
+
+
+
+<head><meta name="generator" content="Hexo 3.8.0">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="author" content="Rep">
+    <meta name="renderer" content="webkit">
+    <meta name="copyright" content="Rep">
+    
+    <meta name="keywords" content="hexo,hexo-theme,hexo-blog">
+    
+    <meta name="description" content="">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>KMP算法详细讲解 · Binary Overflow</title>
+    <style type="text/css">
+    @font-face {
+        font-family: 'Oswald-Regular';
+        src: url("/font/Oswald-Regular.ttf");
+    }
+
+    body {
+        margin: 0;
+    }
+
+    header,
+    footer,
+    .back-top,
+    .sidebar,
+    .container,
+    .site-intro-meta,
+    .toc-wrapper {
+        display: none;
+    }
+
+    .site-intro {
+        position: relative;
+        z-index: 3;
+        width: 100%;
+        /* height: 50vh; */
+        overflow: hidden;
+    }
+
+    .site-intro-placeholder {
+        position: absolute;
+        z-index: -2;
+        top: 0;
+        left: 0;
+        width: calc(100% + 300px);
+        height: 100%;
+        background: repeating-linear-gradient(-45deg, #444 0, #444 80px, #333 80px, #333 160px);
+        background-position: center center;
+        transform: translate3d(-226px, 0, 0);
+        animation: gradient-move 2.5s ease-out 0s infinite;
+    }
+
+    @keyframes gradient-move {
+        0% {
+            transform: translate3d(-226px, 0, 0);
+        }
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+
+</style>
+
+    <link rel="preload" href="/css/style.css?v=20180824" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="stylesheet" href="/css/mobile.css?v=20180824" media="(max-width: 980px)">
+    
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    
+    <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
+/* This file is meant as a standalone workflow for
+- testing support for link[rel=preload]
+- enabling async CSS loading in browsers that do not support rel=preload
+- applying rel preload css once loaded, whether supported or not.
+*/ -->
+<script>
+(function( w ){
+	"use strict";
+	// rel=preload support test
+	if( !w.loadCSS ){
+		w.loadCSS = function(){};
+	}
+	// define on the loadCSS obj
+	var rp = loadCSS.relpreload = {};
+	// rel=preload feature support test
+	// runs once and returns a function for compat purposes
+	rp.support = (function(){
+		var ret;
+		try {
+			ret = w.document.createElement( "link" ).relList.supports( "preload" );
+		} catch (e) {
+			ret = false;
+		}
+		return function(){
+			return ret;
+		};
+	})();
+
+	// if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+	// then change that media back to its intended value on load
+	rp.bindMediaToggle = function( link ){
+		// remember existing media attr for ultimate state, or default to 'all'
+		var finalMedia = link.media || "all";
+
+		function enableStylesheet(){
+			link.media = finalMedia;
+		}
+
+		// bind load handlers to enable media
+		if( link.addEventListener ){
+			link.addEventListener( "load", enableStylesheet );
+		} else if( link.attachEvent ){
+			link.attachEvent( "onload", enableStylesheet );
+		}
+
+		// Set rel and non-applicable media type to start an async request
+		// note: timeout allows this to happen async to let rendering continue in IE
+		setTimeout(function(){
+			link.rel = "stylesheet";
+			link.media = "only x";
+		});
+		// also enable media after 3 seconds,
+		// which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+		setTimeout( enableStylesheet, 3000 );
+	};
+
+	// loop through link elements in DOM
+	rp.poly = function(){
+		// double check this to prevent external calls from running
+		if( rp.support() ){
+			return;
+		}
+		var links = w.document.getElementsByTagName( "link" );
+		for( var i = 0; i < links.length; i++ ){
+			var link = links[ i ];
+			// qualify links to those with rel=preload and as=style attrs
+			if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+				// prevent rerunning on link
+				link.setAttribute( "data-loadcss", true );
+				// bind listeners to toggle media back
+				rp.bindMediaToggle( link );
+			}
+		}
+	};
+
+	// if unsupported, run the polyfill
+	if( !rp.support() ){
+		// run once at least
+		rp.poly();
+
+		// rerun poly on an interval until onload
+		var run = w.setInterval( rp.poly, 500 );
+		if( w.addEventListener ){
+			w.addEventListener( "load", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		} else if( w.attachEvent ){
+			w.attachEvent( "onload", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		}
+	}
+
+
+	// commonjs
+	if( typeof exports !== "undefined" ){
+		exports.loadCSS = loadCSS;
+	}
+	else {
+		w.loadCSS = loadCSS;
+	}
+}( typeof global !== "undefined" ? global : this ) );
+</script>
+
+    <link rel="icon" href="/assets/favicon.ico">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js" as="script">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" as="script">
+    <link rel="preload" href="/scripts/main.js" as="script">
+    <link rel="preload" as="font" href="/font/Oswald-Regular.ttf" crossorigin="">
+    <link rel="preload" as="font" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" crossorigin="">
+    
+    <!-- fancybox -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script>
+    <!-- 百度统计  -->
+    
+    <!-- 谷歌统计  -->
+    
+</head>
+
+    
+        <body class="post-body">
+    
+    
+<header class="header">
+
+    <div class="read-progress"></div>
+    <div class="header-sidebar-menu">&#xe775;</div>
+    <!-- post页的toggle banner  -->
+    
+    <div class="banner">
+            <div class="blog-title">
+                <a href="/">Binary Overflow.</a>
+            </div>
+            <div class="post-title">
+                <a href="#" class="post-name">KMP算法详细讲解</a>
+            </div>
+    </div>
+    
+    <a class="home-link" href="/">Binary Overflow.</a>
+</header>
+    <div class="wrapper">
+        <div class="site-intro" style="
+
+
+
+
+
+
+
+height:50vh;
+">
+    
+    <!-- 主页  -->
+    
+    
+    <!-- 404页  -->
+            
+    <div class="site-intro-placeholder"></div>
+    <div class="site-intro-img" style="background-image: url(/intro/post-bg.jpg)"></div>
+    <div class="site-intro-meta">
+        <!-- 标题  -->
+        <h1 class="intro-title">
+            <!-- 主页  -->
+            
+            KMP算法详细讲解
+            <!-- 404 -->
+            
+        </h1>
+        <!-- 副标题 -->
+        <p class="intro-subtitle">
+            <!-- 主页副标题  -->
+            
+            
+            <!-- 404 -->
+            
+        </p>
+        <!-- 文章页meta -->
+        
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                
+                    <div class="post-intro-tags">
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="数据结构">数据结构</a>
+    
+</div>
+                
+                
+                    <div class="post-intro-read">
+                        <span>字数统计: <span class="post-count word-count">2.7k</span>阅读时长: <span class="post-count reading-time">10 min</span></span>
+                    </div>
+                
+                <div class="post-intro-meta">
+                    <span class="post-intro-calander iconfont-archer">&#xe676;</span>
+                    <span class="post-intro-time">2018/10/19</span>
+                    
+                    <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                        <span class="iconfont-archer">&#xe602;</span>
+                        <span id="busuanzi_value_page_pv"></span>
+                    </span>
+                    
+                    <span class="shareWrapper">
+                        <span class="iconfont-archer shareIcon">&#xe71d;</span>
+                        <span class="shareText">Share</span>
+                        <ul class="shareList">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
+        
+    </div>
+</div>
+        <script>
+ 
+  // get user agent
+  var browser = {
+    versions: function () {
+      var u = window.navigator.userAgent;
+      return {
+        userAgent: u,
+        trident: u.indexOf('Trident') > -1, //IE内核
+        presto: u.indexOf('Presto') > -1, //opera内核
+        webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+        gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+        mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+        ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+        android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+        iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
+        iPad: u.indexOf('iPad') > -1, //是否为iPad
+        webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
+        weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
+        uc: u.indexOf('UCBrowser') > -1 //是否为android下的UC浏览器
+      };
+    }()
+  }
+  console.log("userAgent:" + browser.versions.userAgent);
+
+  // callback
+  function fontLoaded() {
+    console.log('font loaded');
+    if (document.getElementsByClassName('site-intro-meta')) {
+      document.getElementsByClassName('intro-title')[0].classList.add('intro-fade-in');
+      document.getElementsByClassName('intro-subtitle')[0].classList.add('intro-fade-in');
+      var postIntros = document.getElementsByClassName('post-intros')[0]
+      if (postIntros) {
+        postIntros.classList.add('post-fade-in');
+      }
+    }
+  }
+
+  // UC不支持跨域，所以直接显示
+  function asyncCb(){
+    if (browser.versions.uc) {
+      console.log("UCBrowser");
+      fontLoaded();
+    } else {
+      WebFont.load({
+        custom: {
+          families: ['Oswald-Regular']
+        },
+        loading: function () {  //所有字体开始加载
+          // console.log('loading');
+        },
+        active: function () {  //所有字体已渲染
+          fontLoaded();
+        },
+        inactive: function () { //字体预加载失败，无效字体或浏览器不支持加载
+          console.log('inactive: timeout');
+          fontLoaded();
+        },
+        timeout: 5000 // Set the timeout to two seconds
+      });
+    }
+  }
+
+  function asyncErr(){
+    console.warn('script load from CDN failed, will load local script')
+  }
+
+  // load webfont-loader async, and add callback function
+  function async(u, cb, err) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (cb) { o.addEventListener('load', function (e) { cb(null, e); }, false); }
+    if (err) { o.addEventListener('error', function (e) { err(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+
+  var asyncLoadWithFallBack = function(arr, success, reject) {
+      var currReject = function(){
+        reject()
+        arr.shift()
+        if(arr.length)
+          async(arr[0], success, currReject)
+        }
+
+      async(arr[0], success, currReject)
+  }
+
+  asyncLoadWithFallBack([
+    "https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js", 
+    "https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js",
+    "/lib/webfontloader.min.js"
+  ], asyncCb, asyncErr)
+</script>        
+        <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
+        <div class="container container-unloaded">
+            <main class="main post-page">
+    <article class="article-entry">
+        <p><strong><h1>0x00 介绍</h1></strong><br>该博客是我经过几个博客的讲解 在加上自己在理解这个算法时的一点坑总结的 应该对大家KMP了解有个很大帮助 下面讲解把主串都写为str,模式匹配串为ptr</p>
+<p>KMP是三位大牛：D.E.Knuth、J.H.Morris和V.R.Pratt同时发现的。其中第一位就是《计算机程序设计艺术》的作者！！<br>KMP算法要解决的问题就是在字符串（也叫主串）中的模式（pattern）定位问题。说简单点就是我们平时常说的关键字搜索。模式串就是关键字，如果它在一个主串中出现，就返回它的具体位置，否则返回-1（常用手段）。<a id="more"></a><br><strong><h1>0x01 讲解</h1></strong><br><img src="https://i.loli.net/2018/10/19/5bc9700a03942.png" alt="Image text"><br>像如图一样 如果匹配到最后一个不一样的话 按照普通的字符串匹配BF算法 需要从主串的第二个开始匹配<br><img src="https://i.loli.net/2018/10/19/5bc970a8c1dc4.png" alt="Image text"><br>会发现为何不跳过主串的BC直接从A比较 因为匹配肯定要从主串的A开始才可以继续向后匹配<br><img src="https://i.loli.net/2018/10/19/5bc98f47049b6.png" alt="Image text"><br>这虽是一个很节省的办法 可是给大家看另外一个例子<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">str:</span><br><span class="line">+---------------------+</span><br><span class="line">|S|S|S|S|S|S|S|S|S|S|A|</span><br><span class="line">+---------------------+</span><br><span class="line">ptr:</span><br><span class="line">+-------------+</span><br><span class="line">|S|S|S|S|S|S|B|</span><br><span class="line">+-------------+</span><br></pre></td></tr></table></figure></p>
+<p>我们会发现如果去str上找与ptr第一个字符相同的再去比较会发现 全都是S 还需要一个一个比较 那有没有把所有情况都综合在一起的最优匹配法<br>那就是KMP算法<br><img src="https://i.loli.net/2018/10/19/5bc973f732328.jpg" alt="Image text"><br>如该图(1 2 3 4是相同的字符串 并且把1 3称为前缀 2 4为后缀) 下面主串与匹配串匹配到4(也就是主串是2的地方)的后面B和A是不相同的 可以把匹配串的头也就是3移动到4的位置(也就是和2对应位置)开始继续匹配 主串就不需要从1开始向后一一匹配<br>可能现在讲 一下子不太懂 接着看<br><img src="https://i.loli.net/2018/10/19/5bc978de62409.png" alt="Image text"><br>如图(把主串黑色框带1号区域 红色为2号区域 模式匹配串黑色为3号区域 红色为4号区域 方便说明)<br>当主串与模式匹配串匹配到d和c时候不相同 模式匹配串可以直接移动3号区域与原来自己的4号区域对齐 再继续匹配 为什么呢?<br>因为原先的模式匹配串4区域与字串的2区域是相同的4又与3是一样的 就表示在1 2之间没有与3匹配的<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">+---------------------+</span><br><span class="line">|s|a|b|t|a|a|b|t|d|c|a|c|</span><br><span class="line">  |a|b|t|a|a|b|n|</span><br><span class="line">  +-----------+</span><br><span class="line"></span><br><span class="line">+---------------------+</span><br><span class="line">|s|a|b|t|a|a|b|t|d|c|a|c|</span><br><span class="line">          |a|b|t|a|a|b|n|</span><br><span class="line">        +-----------+</span><br></pre></td></tr></table></figure></p>
+<p>注意最长前缀：是说以第一个字符开始，但是不包含最后一个字符。 最长后缀一样的道理<br>如上 当模式匹配串匹配到n与t时候不一样 并且n前面的字符串有相同的前缀和后缀(ab)<br>如果模式匹配串的后缀开始匹配不同(就是模式匹配串后面的ab开始的匹配) 就可以从模式匹配串前缀开始 去进行原先后缀没有匹配成功的哪里去匹配 不必要从前缀和后缀之间去一个一个匹配 因为相对的主串之间不可能存在与模式匹配串前缀相同的字符串 如上图模式匹配串中虽然存在与模式匹配串第一个字符相同的a 并且有两个 如果按照之前的移动到主串下一个a的地方会发现第一个<br>a后面的ab自然与主串中不匹配 但是如果移动到第二个a(即移动到原先后缀的地方) 会发现可以省去前面字符的匹配 我写的这个模式匹配串前缀ab和后缀ab之前只有一个a 万一中间有很多字符<br>那在中间匹配就很浪费时间 这样的kmp算法 就能节省很多时间 </p>
+<p>用简单明了的句子去说就是模式匹配串如果匹配到某个位置与主串不一样的话 判断模式匹配串该位置前面的字符串是否是相同的最长前缀和最长后缀(如abtab,ababa) 这里一定要好好理解! 自己那笔写几个例子<br>下面的问题就是 如何知道我匹配到不成功的时候前面是不是有相同的最长前缀和最长后缀 如何前缀移动到原先后缀处 而大牛们就想了个办法 先用一个next[]数组去存模式匹配串从头开始的所<br>有字串 还看上面的例子<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">+---------------------+</span><br><span class="line">|s|a|b|t|a|a|b|t|d|c|a|c|</span><br><span class="line">  |a|b|t|a|a|b|n|</span><br><span class="line">  +-----------+</span><br><span class="line"></span><br><span class="line">+---------------------+</span><br><span class="line">|s|a|b|t|a|a|b|t|d|c|a|c|</span><br><span class="line">          |a|b|t|a|a|b|n|</span><br><span class="line">          +-------------+</span><br></pre></td></tr></table></figure></p>
+<p>模式匹配串后缀ab中的b是字符串的第5个位置 那我们就想办法让next[5]存的是相同前缀ab中b的位置就可以! 这样当判断到后缀后的字符不匹配时就可以通过next[]去移动到前缀<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">while(ptr[k+1] != str[i])</span><br><span class="line">k = next[k];</span><br></pre></td></tr></table></figure></p>
+<p>看这个代码ptr是模式匹配字符串 str是主串 i是匹配到主串的那个位置 k是后缀最后一个字符的位置 k+1就是后缀后第一个字符开始去与主串匹配 如果不同就代表后缀开始的匹配不成功<br>从而k = next[k] 移动到前缀的b位置 所以此时的next[5] = 1 因为abtaab的前缀b为ptr[1],(数组从0开始) 那相同的ababa如果后缀aba后的字符匹配不相同时所有后缀的最后一个字符<br>next[4] = 2 会发现next存的就是相同的前缀和后缀的最大长度-1<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">对于目标字符串ptr，ababaca，长度是7，</span><br><span class="line">所以next[0]，next[1]，next[2]，next[3]，next[4]，next[5]，next[6]分别计算的是 </span><br><span class="line">a，ab，aba，abab，ababa，ababac，ababaca的相同的最长前缀和最长后缀的长度</span><br><span class="line">由于a，ab，aba，abab，ababa，ababac，ababaca的相同的最长前缀和最长后缀是“”，“”，“a”，“ab”，“aba”，“”，“a”</span><br><span class="line">所以next数组的值是[-1,-1,0,1,2,-1,0]</span><br><span class="line">这里-1表示不存在，0表示存在长度为1，2表示存在长度为3。这是为了和代码相对应。</span><br></pre></td></tr></table></figure></p>
+<p>而KMP比较难也比较复杂的就是这个next数组的构造<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">void Createnext(char *ptr, int *next, int psize) //传入参数模式匹配字符串 next数组 模式匹配字符串长度</span><br><span class="line">&#123;</span><br><span class="line">    int k = -1;      </span><br><span class="line">    next[0] = -1;                //next[0]必为-1</span><br><span class="line">    for(int i=1;i&lt;psize;i++)</span><br><span class="line">    &#123;</span><br><span class="line">        while(k&gt;-1 &amp;&amp; ptr[k+1]!=ptr[i])   //如果不匹配 k = next[k]</span><br><span class="line">            k = next[k];</span><br><span class="line">        if(ptr[k+1] == ptr[i])     </span><br><span class="line">            k = k+1;               //如果相同k+1</span><br><span class="line">         next[i] = k;              //-1表示不存在，0表示存在长度为1，2表示存在长度为3。这是为了和代码相对应</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>这个for循环就是计算next[0]，next[1],…next[q]…的值。<br>比如我们已经知道ababab，q=4时，next[4]=2（k=2，表示该字符串的前5个字母组成的子串ababa存在相同的最长前缀和最长后缀的长度是3，所以k=2,next[4]=2。这个结果可以理解成我们自己观察算的，也可以理解成程序自己算的，这不是重点，重点是程序根据目前的结果怎么算next[5]的）.，那么对于字符串ababab，我们计算next[5]的时候，此时q=5, k=2（上一步循环结束后的结果）。那么我们需要比较的是str[k+1]和str[q]是否相等，其实就是str[1]和str[5]是否相等！，为啥从k+1比较呢，因为上一次循环中，我们已经保证了str[k]和str[q]（注意这个q是上次循环的q）是相等的（这句话自己想想，很容易理解），所以到本次循环，我们直接比较str[k+1]和str[q]是否相等（这个q是本次循环的q）。<br>如果相等，那么跳出while()，进入if()，k=k+1，接着next[q]=k。即对于ababab，我们会得出next[5]=3。 这是程序自己算的，和我们观察的是一样的。<br>如果不等，我们可以用”ababac“描述这种情况。 不等，进入while()里面，进行k=next[k]，这句话是说，在str[k + 1] != str[q]的情况下，我们往前找一个k，使str[k + 1]==str[q]，是往前一个一个找呢，还是有更快的找法呢？ 程序给出了一种更快的找法，那就是 k = next[k]。 程序的意思是说，一旦str[k + 1] != str[q]，即在后缀里面找不到时，我是可以直接跳过中间一段，跑到前缀里面找，next[k]就是相同的最长前缀和最长后缀的长度。所以，k=next[k]就变成，k=next[2]，即k=0。此时再比较str[0+1]和str[5]是否相等，不等，则k=next[0]=-1。跳出循环。 </p>
+<p>如果还不理解while是干嘛的话 我再举例子 当模式匹配串abcabtmnabcabcmn 构造next数组到abcabtmnabcabc字串的时候 k就是前缀abcab的最后一个b的位置 当判断k+1(也就是吧后面t)与i<br>(也是现在匹配的最后一个c)不同时候(t与c不同) 就会发生k = next[k] 也就是从第一个ab的后开始去与c匹配 因为abcab是拥有相同的前缀和后缀(ab) next[4]=1 也就是现在前缀b在该字符串中的位置发发现abc和后面abc是一样的 也就是abcabtmnabcabc字串的next[] = 2  这样能减少因为找与前缀相同的开头而去不停向前移动的次数</p>
+<p>KMP代码<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">int KMP(char *str, char *ptr,int ssize, int psize)</span><br><span class="line">&#123;</span><br><span class="line">    int *next = new int[psize];</span><br><span class="line">    Createnext(ptr,next,psize);</span><br><span class="line">    int k = -1;</span><br><span class="line">    for(int i=0;i&lt;ssize;i++)</span><br><span class="line">    &#123;</span><br><span class="line">        while(k&gt;-1 &amp;&amp; ptr[k+1] != str[i])</span><br><span class="line">            k = next[k];                   //如果没用匹配成功通过next[] 去进行移动</span><br><span class="line">        if(ptr[k+1] == str[i])</span><br><span class="line">            k = k+1;            //主串去模式匹配串匹配成功过的话就+1</span><br><span class="line">        if(k == psize-1)</span><br><span class="line">            return i-psize+1;       // k == psize-1时候就是匹配到模式匹配串最后 匹配成功 返回主串开始匹配的位置</span><br><span class="line">      &#125;</span><br><span class="line">      return -1;              //循环出来也没有匹配到 没有匹配的 赋值-1</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>最后的测试<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">int main()</span><br><span class="line">&#123;</span><br><span class="line">    int result = KMP(&quot;cccaba&quot;, &quot;aba&quot;, 6, 3);</span><br><span class="line">    cout&lt;&lt;result+1&lt;&lt;endl;</span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">结果如下:</span><br><span class="line"></span><br><span class="line">4                                                                                                                                                              Process returned 0 (0x0)   execution time : 0.159 s                  </span><br><span class="line">Press any key to continue.</span><br></pre></td></tr></table></figure></p>
+<p>至此OVER 如果我觉得哪里没有将清楚 或者有不明白 联系我 我会帮您解决问题!<br>资料来源:<br><a href="https://blog.csdn.net/starstar1992/article/details/54913261" target="_blank" rel="noopener">https://blog.csdn.net/starstar1992/article/details/54913261</a><br><a href="https://www.cnblogs.com/yjiyjige/p/3263858.html" target="_blank" rel="noopener">https://www.cnblogs.com/yjiyjige/p/3263858.html</a></p>
+
+    </article>
+    <!-- license  -->
+    
+    <!-- paginator  -->
+    <ul class="post-paginator">
+        <li class="next">
+            
+                <div class="nextSlogan">Next Post</div>
+                <a href="/2018/10/26/格式化字符串漏洞/" title="格式化字符串漏洞">
+                    <div class="nextTitle">格式化字符串漏洞</div>
+                </a>
+            
+        </li>
+        <li class="previous">
+            
+                <div class="prevSlogan">Previous Post</div>
+                <a href="/2018/10/17/链表的建立排序及其归并/" title="链表的建立排序及其归并">
+                    <div class="prevTitle">链表的建立排序及其归并</div>
+                </a>
+            
+        </li>
+    </ul>
+    <!-- 评论插件 -->
+    <!-- 来必力City版安装代码 -->
+
+    <div id="lv-container" data-id="city" data-uid="MTAyMC80MDc5OS8xNzMyNA==">
+        <script type="text/javascript">
+            (function (d, s) {
+                var j, e = d.getElementsByTagName(s)[0];
+                if (typeof LivereTower === 'function') { return; }
+                j = d.createElement(s);
+                j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+                j.async = true;
+
+                e.parentNode.insertBefore(j, e);
+            })(document, 'script');
+        </script>
+        <noscript>为正常使用来必力评论功能请激活JavaScript</noscript>
+    </div>
+
+<!-- City版安装代码已完成 -->
+    
+    
+    <!-- partial('_partial/comment/changyan') -->
+    <!--PC版-->
+
+
+    
+    
+
+    <!-- 评论 -->
+</main>
+            <!-- profile -->
+            
+        </div>
+        <footer class="footer footer-unloaded">
+    <!-- social  -->
+    
+    <div class="social">
+        
+    
+        
+            
+                <a href="mailto:898607912@qq.com" class="iconfont-archer email" title="email"></a>
+            
+        
+    
+        
+            
+                <a href="//github.com/RePw" class="iconfont-archer github" target="_blank" title="github"></a>
+            
+        
+    
+        
+            
+                <span class="iconfont-archer wechat" title="wechat">
+                  
+                  <img class="profile-qr" src="/assets/test.png">
+                </span>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+    </div>
+    
+    <!-- powered by Hexo  -->
+    <div class="copyright">
+        <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">Archer</a></span>
+    </div>
+    <!-- 不蒜子  -->
+    
+    <div class="busuanzi-container">
+    
+     
+    <span id="busuanzi_container_site_pv">PV: <span id="busuanzi_value_site_pv"></span> :)</span>
+    
+    </div>
+    
+</footer>
+    </div>
+    <!-- toc -->
+    
+    <div class="toc-wrapper" style=
+    
+
+
+
+
+
+
+
+top:50vh;
+
+    >
+        <div class="toc-catalog">
+            <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+        </div>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#undefined"><span class="toc-number">1.</span> <span class="toc-text">0x00 介绍</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#undefined"><span class="toc-number">2.</span> <span class="toc-text">0x01 讲解</span></a></li></ol>
+    </div>
+    
+    <div class="back-top iconfont-archer">&#xe639;</div>
+    <div class="sidebar sidebar-hide">
+    <ul class="sidebar-tabs sidebar-tabs-active-0">
+        <li class="sidebar-tab-archives"><span class="iconfont-archer">&#xe67d;</span><span class="tab-name">Archive</span></li>
+        <li class="sidebar-tab-tags"><span class="iconfont-archer">&#xe61b;</span><span class="tab-name">Tag</span></li>
+        <li class="sidebar-tab-categories"><span class="iconfont-archer">&#xe666;</span><span class="tab-name">Cate</span></li>
+    </ul>
+    <div class="sidebar-content sidebar-content-show-archive">
+          <div class="sidebar-panel-archives">
+    <!-- 在ejs中将archive按照时间排序 -->
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <div class="total-and-search">
+        <div class="total-archive">
+        Total : 11
+        </div>
+        <!-- search  -->
+        
+    </div>
+    
+    <div class="post-archive">
+    
+    
+    
+    
+    <div class="archive-year"> 2018 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/01</span><a class="archive-post-title" href="/2018/11/01/ROP之ret2libc/">ROP之ret2libc</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/27</span><a class="archive-post-title" href="/2018/10/27/栈溢出之ROP基础/">栈溢出之ROP基础</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/26</span><a class="archive-post-title" href="/2018/10/26/格式化字符串漏洞/">格式化字符串漏洞</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/19</span><a class="archive-post-title" href="/2018/10/19/KMP算法详细讲解/">KMP算法详细讲解</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/17</span><a class="archive-post-title" href="/2018/10/17/链表的建立排序及其归并/">链表的建立排序及其归并</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/17</span><a class="archive-post-title" href="/2018/10/17/学习资源/">学习资料共享</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/17</span><a class="archive-post-title" href="/2018/10/17/linux上jdk配置以及eclipse安装/">linux上jdk配置以及eclipse安装</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/16</span><a class="archive-post-title" href="/2018/10/16/Eclipse-连接Mysql数据库方法/">Eclipse 连接Mysql数据库方法</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/14</span><a class="archive-post-title" href="/2018/10/14/uaf漏洞-use-after-free/">uaf漏洞(use after free)在虚函数中的利用</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/12</span><a class="archive-post-title" href="/2018/10/12/CVE-2014-6271-Bash破壳漏洞-远程执行/">CVE-2014-6271/Bash破壳漏洞/远程执行</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/12</span><a class="archive-post-title" href="/2018/10/12/github-hexo个人博客搭建/">github+hexo个人博客搭建</a>
+        </li>
+    
+    </ul></div>
+  </div>
+        <div class="sidebar-panel-tags">
+    <div class="sidebar-tags-name">
+    
+        <span class="sidebar-tag-name" data-tags="漏洞"><span class="iconfont-archer">&#xe606;</span>漏洞</span>
+    
+        <span class="sidebar-tag-name" data-tags="数据结构"><span class="iconfont-archer">&#xe606;</span>数据结构</span>
+    
+        <span class="sidebar-tag-name" data-tags="搭建"><span class="iconfont-archer">&#xe606;</span>搭建</span>
+    
+        <span class="sidebar-tag-name" data-tags="java"><span class="iconfont-archer">&#xe606;</span>java</span>
+    
+        <span class="sidebar-tag-name" data-tags="资料"><span class="iconfont-archer">&#xe606;</span>资料</span>
+    
+    </div>
+    <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
+    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
+    缺失模块。<br>
+    1、请确保node版本大于6.2<br>
+    2、在博客根目录（注意不是archer根目录）执行以下命令：<br>
+    <span style="color: #f75357; font-size: 1rem; line-height: 2rem;">npm i hexo-generator-json-content --save</span><br>
+    3、在根目录_config.yml里添加配置：
+    <pre style="color: #787878; font-size: 0.6rem;">
+jsonContent:
+  meta: false
+  pages: false
+  posts:
+    title: true
+    date: true
+    path: true
+    text: false
+    raw: false
+    content: false
+    slug: false
+    updated: false
+    comments: false
+    link: false
+    permalink: false
+    excerpt: false
+    categories: true
+    tags: true</pre>
+    </div> 
+    <div class="sidebar-tags-list"></div>
+</div>
+        <div class="sidebar-panel-categories">
+    <div class="sidebar-categories-name">
+    
+    </div>
+    <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
+    <div class="sidebar-categories-list"></div>
+</div>
+    </div>
+</div> 
+    <script>
+    var siteMeta = {
+        root: "/",
+        author: "Rep"
+    }
+</script>
+    <!-- CDN failover -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+    <script type="text/javascript">
+        if (typeof window.$ === 'undefined')
+        {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js">\x3C/script>')
+        }
+    </script>
+    <script src="/scripts/main.js"></script>
+    <!-- algolia -->
+    
+    <!-- busuanzi  -->
+    
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+    <!-- CNZZ  -->
+    
+    </div>
+    <!-- async load share.js -->
+    
+        <script src="/scripts/share.js" async></script>    
+     
+    </body>
+</html>
+
+
