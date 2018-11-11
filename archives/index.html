@@ -346,6 +346,36 @@
     
     
     <article class="index-post">
+        <a class="abstract-title" href="/2018/11/11/堆溢出题目-bb-tacche/">
+            
+                <span>堆溢出题目:bb_tcache</span>
+        </a>
+        <div class="abstract-content">
+            0x00 bb_tcache介绍山大的题目 第一次接触堆的题目 以前只是看过堆溢出unlink相关的知识山大题目连接http://47.105.148.65:4000/login?next=%2Fchallenges先简短解释下这道题堆题用到的知识malloc_hook堆钩1malloc_hook是在调用malloc函数之前检查的地方，正常情况下该地址下的值为0，如果该内存不为0，则会在malloc前先执行malloc_hook中的地址的内容。也就是说如果我们在这块内存写入one_gadget，就会在malloc前执行one_gadget。
+每次调用堆的申请 释放等函数时候实际会先执行m...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/11/11</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class="abstract-tags">
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="题目">题目</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
         <a class="abstract-title" href="/2018/11/01/ROP之ret2libc/">
             
                 <span>ROP之ret2libc</span>
@@ -362,7 +392,7 @@
             
             <div class="abstract-tags">
     
-        <a class="post-tag" href="javascript:void(0);" data-tags="漏洞">漏洞</a>
+        <a class="post-tag" href="javascript:void(0);" data-tags="题目">题目</a>
     
 </div>
             
@@ -602,36 +632,6 @@
         </div>
     </article>
     
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href="/2018/10/12/CVE-2014-6271-Bash破壳漏洞-远程执行/">
-            
-                <span>CVE-2014-6271/Bash破壳漏洞/远程执行</span>
-        </a>
-        <div class="abstract-content">
-            <p>做题遇到的 直接了解了一下这个漏洞<br>CVE-2014-6271被当时微软评为10级漏洞 远程执行能力恐怖</p>
-<p></p><h2>影响版本</h2><br>Bash版本小于等于4.3版本<br>Red Hat Enterprise Linux 4 (ELS)<br>Red Hat Enterprise Linux 4 Extended Lifecycle Support - bash-3.0-27.el4.2<br>
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/10/12</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class="abstract-tags">
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="漏洞">漏洞</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
     <!-- paginator  -->
     
     <nav class="page-nav">
@@ -848,9 +848,32 @@
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 11
+        Total : 12
         </div>
         <!-- search  -->
         
@@ -863,6 +886,11 @@
     
     <div class="archive-year"> 2018 </div>
     <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/11</span><a class="archive-post-title" href="/2018/11/11/堆溢出题目-bb-tacche/">堆溢出题目:bb_tcache</a>
+        </li>
     
     
         <li class="archive-post-item">
@@ -926,11 +954,13 @@
     
         <span class="sidebar-tag-name" data-tags="漏洞"><span class="iconfont-archer">&#xe606;</span>漏洞</span>
     
-        <span class="sidebar-tag-name" data-tags="数据结构"><span class="iconfont-archer">&#xe606;</span>数据结构</span>
-    
         <span class="sidebar-tag-name" data-tags="搭建"><span class="iconfont-archer">&#xe606;</span>搭建</span>
     
+        <span class="sidebar-tag-name" data-tags="数据结构"><span class="iconfont-archer">&#xe606;</span>数据结构</span>
+    
         <span class="sidebar-tag-name" data-tags="java"><span class="iconfont-archer">&#xe606;</span>java</span>
+    
+        <span class="sidebar-tag-name" data-tags="题目"><span class="iconfont-archer">&#xe606;</span>题目</span>
     
         <span class="sidebar-tag-name" data-tags="资料"><span class="iconfont-archer">&#xe606;</span>资料</span>
     
