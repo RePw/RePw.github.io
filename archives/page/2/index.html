@@ -346,6 +346,35 @@
     
     
     <article class="index-post">
+        <a class="abstract-title" href="/2018/10/14/uaf漏洞-use-after-free/">
+            
+                <span>uaf漏洞(use after free)在虚函数中的利用</span>
+        </a>
+        <div class="abstract-content">
+            <p><strong><h1>漏洞原理</h1></strong><br>   当应用程序调用free()释放内存时，如果内存块小于256kb，dlmalloc并不马上将内存块释放回内存，而是将内存块标记为空闲状态。<br>这么做的原因有两个：一是内存块不一定能马上释放会内核（比如内存块不是位于堆顶端），二是供应用程序下次申请内存使用（这是<br>主要原因）。当dlmalloc中空闲内存量达到一定值时dlmalloc才将空闲内存释放会内核。如果应用程序申请的内存大于256kb，dlmalloc<br>调用mmap()向内核申请一块内存，返回返还给应用程序使用。如果应用程序释放的内存大于256kb，dlmalloc马上调用munmap()释放内存。<br>dlmalloc不会缓存大于256kb的内存块，因为这样的内存块太大了，最好不要长期占用这么大的内存资源。<br>
+        </p></div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/10/14</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class="abstract-tags">
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="漏洞">漏洞</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
         <a class="abstract-title" href="/2018/10/12/CVE-2014-6271-Bash破壳漏洞-远程执行/">
             
                 <span>CVE-2014-6271/Bash破壳漏洞/远程执行</span>
@@ -636,9 +665,52 @@
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 12
+        Total : 13
         </div>
         <!-- search  -->
         
@@ -654,7 +726,12 @@
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">11/11</span><a class="archive-post-title" href="/2018/11/11/堆溢出题目-bb-tacche/">堆溢出题目:bb_tcache</a>
+            <span class="archive-post-date">11/12</span><a class="archive-post-title" href="/2018/11/12/格式化字符串-repeater/">格式化字符串:repeater</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/11</span><a class="archive-post-title" href="/2018/11/11/堆溢出题目-bb-tacche/">山东省安全竞赛pwn题</a>
         </li>
     
     
@@ -719,13 +796,13 @@
     
         <span class="sidebar-tag-name" data-tags="漏洞"><span class="iconfont-archer">&#xe606;</span>漏洞</span>
     
-        <span class="sidebar-tag-name" data-tags="题目"><span class="iconfont-archer">&#xe606;</span>题目</span>
-    
         <span class="sidebar-tag-name" data-tags="数据结构"><span class="iconfont-archer">&#xe606;</span>数据结构</span>
+    
+        <span class="sidebar-tag-name" data-tags="java"><span class="iconfont-archer">&#xe606;</span>java</span>
     
         <span class="sidebar-tag-name" data-tags="搭建"><span class="iconfont-archer">&#xe606;</span>搭建</span>
     
-        <span class="sidebar-tag-name" data-tags="java"><span class="iconfont-archer">&#xe606;</span>java</span>
+        <span class="sidebar-tag-name" data-tags="题目"><span class="iconfont-archer">&#xe606;</span>题目</span>
     
         <span class="sidebar-tag-name" data-tags="资料"><span class="iconfont-archer">&#xe606;</span>资料</span>
     

