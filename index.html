@@ -388,13 +388,43 @@ height:50vh;
     
     
     <article class="index-post">
+        <a class="abstract-title" href="/2018/11/11/堆溢出题目-bb-tacche/">
+            
+                <span>山东省安全竞赛pwn题</span>
+        </a>
+        <div class="abstract-content">
+            0x00 堆溢出:bb_tcache山大的题目 第一次接触堆的题目 以前只是看过堆溢出unlink相关的知识山大题目连接http://47.105.148.65:4000/login?next=%2Fchallenges先简短解释下这道题堆题用到的知识malloc_hook堆钩1malloc_hook是在调用malloc函数之前检查的地方，正常情况下该地址下的值为0，如果该内存不为0，则会在malloc前先执行malloc_hook中的地址的内容 也就是说如果我们在这块内存写入one_gadget，就会在malloc前执行one_gadget。每次调用堆的申请 释放等函数时候实际会先执行...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/11/11</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class="abstract-tags">
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="题目">题目</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
         <a class="abstract-title" href="/2018/11/01/ROP之ret2libc/">
             
                 <span>ROP之ret2libc</span>
         </a>
         <div class="abstract-content">
-            <p><strong><h1>0x00 前言</h1></strong><br>CTF-WIKI种给出的原理ret2libc原理:如果我们知道 libc 中某个函数的地址，那么我们就可以确定该程序利用的 libc。进而我们就可以知道 system 函数的地址。<br>
-        </p></div>
+            0x00 前言CTF-WIKI种给出的原理ret2libc原理:如果我们知道 libc 中某个函数的地址，那么我们就可以确定该程序利用的 libc。进而我们就可以知道 system 函数的地址。那么如何得到 libc 中的某个函数的地址呢？我们一般常用的方法是采用 got 表泄露，即输出某个函数对应的 got 表项的内容。当然，由于 libc 的延迟绑定机制，我们需要泄漏已经执行过的函数的地址。我们自然可以根据上面的步骤先得到 libc，之后在程序中查询偏移，然后再次获取 system 地址
+自己理解:就是通过OGT表leak出已经执行的函数地址 通过这个函数地址找到libc的基地 再通...
+        </div>
         <div class="abstract-post-meta">
             <!-- date  -->
             <div class="abstract-date">
@@ -422,8 +452,9 @@ height:50vh;
                 <span>栈溢出之ROP基础</span>
         </a>
         <div class="abstract-content">
-            <p><strong><h1>0x00 前言</h1></strong><br>天真无知的我一直以为栈溢出是最简单的 以为结构简单 不像堆溢出那样杂乱无章 但学习了学习ROP之后 发现栈溢出姿势多<br>也不是那么简单! 本此做一个系列文章 后面会持续发布ROP其他姿势<br>
-        </p></div>
+            0x00 前言天真无知的我一直以为栈溢出是最简单的 以为结构简单 不像堆溢出那样杂乱无章 但学习了学习ROP之后 发现栈溢出姿势多也不是那么简单! 本此做一个系列文章 后面会持续发布ROP其他姿势0x01 栈溢出介绍所谓栈溢出就是在栈结构里一个数据溢出到栈里其他位置 导致其他位置的值被改变 从而达到攻击者自己想要的效果 先给大家看一下栈结构给大家举一个例子12345void fun(arg1,arg2)&#123;&#125;当这样的一个fun函数被调用时候1.先把arg2压入栈 再把啊arg1压入栈2.将ret返回地址压入栈3.函数里面其他内容
+栈是有长度的 而你输入数据如果没有长度限...
+        </div>
         <div class="abstract-post-meta">
             <!-- date  -->
             <div class="abstract-date">
@@ -451,8 +482,8 @@ height:50vh;
                 <span>格式化字符串漏洞</span>
         </a>
         <div class="abstract-content">
-            <p><strong><h1>0x00 前言</h1></strong><br>这个漏洞刚开始在网上看到的 第一次没有看懂 后面找到一个博客上的例子 但还是没有调试成功 又问了团队的丁佬(Greenhand)<br>丁佬带我操作了一番 让我有了个了解 下面给大家细细讲解一下!<br>
-        </p></div>
+            0x00 前言这个漏洞刚开始在网上看到的 第一次没有看懂 后面找到一个博客上的例子 但还是没有调试成功 又问了团队的丁佬(Greenhand)丁佬带我操作了一番 让我有了个了解 下面给大家细细讲解一下!0x01 漏洞原理所谓格式化字符串是当你用prinft这种 需要格式化的输出语句时候 平常人可能会是printf(format,string)但也会有人为了省力气 printf(string) 但这样是不行的! 你不能将这个format的权限给别人 否则会导致格式化字符串漏洞 进而导致任务地址可写!!!先讲一下printf中format都有什么 都可以干什么这是printf压入栈中的顺序f...
+        </div>
         <div class="abstract-post-meta">
             <!-- date  -->
             <div class="abstract-date">
@@ -480,9 +511,9 @@ height:50vh;
                 <span>KMP算法详细讲解</span>
         </a>
         <div class="abstract-content">
-            <p><strong><h1>0x00 介绍</h1></strong><br>该博客是我经过几个博客的讲解 在加上自己在理解这个算法时的一点坑总结的 应该对大家KMP了解有个很大帮助 下面讲解把主串都写为str,模式匹配串为ptr</p>
-<p>KMP是三位大牛：D.E.Knuth、J.H.Morris和V.R.Pratt同时发现的。其中第一位就是《计算机程序设计艺术》的作者！！<br>KMP算法要解决的问题就是在字符串（也叫主串）中的模式（pattern）定位问题。说简单点就是我们平时常说的关键字搜索。模式串就是关键字，如果它在一个主串中出现，就返回它的具体位置，否则返回-1（常用手段）。
-        </p></div>
+            0x00 介绍该博客是我经过几个博客的讲解 在加上自己在理解这个算法时的一点坑总结的 应该对大家KMP了解有个很大帮助 下面讲解把主串都写为str,模式匹配串为ptr
+KMP是三位大牛：D.E.Knuth、J.H.Morris和V.R.Pratt同时发现的。其中第一位就是《计算机程序设计艺术》的作者！！KMP算法要解决的问题就是在字符串（也叫主串）中的模式（pattern）定位问题。说简单点就是我们平时常说的关键字搜索。模式串就是关键字，如果它在一个主串中出现，就返回它的具体位置，否则返回-1（常用手段）0x01 讲解像如图一样 如果匹配到最后一个不一样的话 按照普通的字符串匹配BF算法...
+        </div>
         <div class="abstract-post-meta">
             <!-- date  -->
             <div class="abstract-date">
@@ -510,8 +541,8 @@ height:50vh;
                 <span>链表的建立排序及其归并</span>
         </a>
         <div class="abstract-content">
-            <p>链表的建立 排序 和非递减归并<br>
-        </p></div>
+            链表的建立 排序 和非递减归并123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657585960616263646566676869707172737475767778798081828384858687888990919293949596979899100101102103104105106107108109110111112113114115116117118119120121122123124125126127128129130...
+        </div>
         <div class="abstract-post-meta">
             <!-- date  -->
             <div class="abstract-date">
@@ -539,8 +570,8 @@ height:50vh;
                 <span>学习资料共享</span>
         </a>
         <div class="abstract-content">
-            <p><strong><h2>所有学习资料仅供大家学习!</h2></strong><br>DDos攻击原理 <a href="https://www.cnblogs.com/2myroad/articles/3881042.html" target="_blank" rel="noopener">https://www.cnblogs.com/2myroad/articles/3881042.html</a><br>Wireshark数据包分析 <a href="https://blog.csdn.net/qicheng777/article/details/74452136" target="_blank" rel="noopener">https://blog.csdn.net/qicheng777/article/details/74452136</a>
-        </p></div>
+            所有学习资料仅供大家学习!DDos攻击原理 https://www.cnblogs.com/2myroad/articles/3881042.htmlWireshark数据包分析 https://blog.csdn.net/qicheng777/article/details/74452136Z-shell安装教程 https://blog.csdn.net/scythe666/article/details/52000098gcc编译介绍(如何取消保护)https://blog.csdn.net/ZNYCSO/article/details/82839743gdb使用方法https:/...
+        </div>
         <div class="abstract-post-meta">
             <!-- date  -->
             <div class="abstract-date">
@@ -568,8 +599,8 @@ height:50vh;
                 <span>linux上jdk配置以及eclipse安装</span>
         </a>
         <div class="abstract-content">
-            <p>先上一下jdk和eclipse文件:<a href="https://pan.baidu.com/s/1VDy_W0t8iomJomrzAvV2hw密码:fb73" target="_blank" rel="noopener">https://pan.baidu.com/s/1VDy_W0t8iomJomrzAvV2hw密码:fb73</a><br>然后在/usr/local目录下mkdir software创建一个software文件夹(名字自己随便取)<br><img src="https://i.loli.net/2018/10/17/5bc69f3b1ad8c.png" alt="Image text"><br>然后把文件解压到这个文件夹下..<br>然后就是配置java环境变量:<br>
-        </p></div>
+            先上一下jdk和eclipse文件:https://pan.baidu.com/s/1VDy_W0t8iomJomrzAvV2hw密码:fb73然后在/usr/local目录下mkdir software创建一个software文件夹(名字自己随便取)然后把文件解压到这个文件夹下..然后就是配置java环境变量:1234567vi /etc/profileexport JAVA_HOME=/usr/local/software/jdk1.8.0_181 //这个跟的是你jdk1.8.0_181那个目录export CLASSPATH=.:$JAVA_HOME/lib/dt.jar:$JA...
+        </div>
         <div class="abstract-post-meta">
             <!-- date  -->
             <div class="abstract-date">
@@ -597,8 +628,8 @@ height:50vh;
                 <span>Eclipse 连接Mysql数据库方法</span>
         </a>
         <div class="abstract-content">
-            <p><strong><h1>0x00 准备</h1></strong><br>连接数据库所需要的包<br>链接: <a href="https://pan.baidu.com/s/1jemNkAbqtewkB4Dp5wn4Tg" target="_blank" rel="noopener">https://pan.baidu.com/s/1jemNkAbqtewkB4Dp5wn4Tg</a> 提取码: 9n78<br><strong><h1>0x01 开始</h1></strong><br>创建工程后 右键-&gt;New-&gt;Folder 然后Folder name:lib<br>创建完后把下好的jar拖进去 再右键-&gt;Bulid path-&gt;Configure build path<br>点击Add JARs<br>
-        </p></div>
+            0x00 准备连接数据库所需要的包链接: https://pan.baidu.com/s/1jemNkAbqtewkB4Dp5wn4Tg 提取码: 9n780x01 开始创建工程后 右键-&gt;New-&gt;Folder 然后Folder name:lib创建完后把下好的jar拖进去 再右键-&gt;Bulid path-&gt;Configure build path点击Add JARs把刚在那个jar添加进去 就会发现多了个Libraries 这就成功了最后附上代码可以用本地数据库也可以连接服务器数据库123456789101112131415161718192021222324...
+        </div>
         <div class="abstract-post-meta">
             <!-- date  -->
             <div class="abstract-date">
@@ -609,35 +640,6 @@ height:50vh;
             <div class="abstract-tags">
     
         <a class="post-tag" href="javascript:void(0);" data-tags="java">java</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href="/2018/10/14/uaf漏洞-use-after-free/">
-            
-                <span>uaf漏洞(use after free)在虚函数中的利用</span>
-        </a>
-        <div class="abstract-content">
-            <p><strong><h1>漏洞原理</h1></strong><br>   当应用程序调用free()释放内存时，如果内存块小于256kb，dlmalloc并不马上将内存块释放回内存，而是将内存块标记为空闲状态。<br>这么做的原因有两个：一是内存块不一定能马上释放会内核（比如内存块不是位于堆顶端），二是供应用程序下次申请内存使用（这是<br>主要原因）。当dlmalloc中空闲内存量达到一定值时dlmalloc才将空闲内存释放会内核。如果应用程序申请的内存大于256kb，dlmalloc<br>调用mmap()向内核申请一块内存，返回返还给应用程序使用。如果应用程序释放的内存大于256kb，dlmalloc马上调用munmap()释放内存。<br>dlmalloc不会缓存大于256kb的内存块，因为这样的内存块太大了，最好不要长期占用这么大的内存资源。<br>
-        </p></div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/10/14</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class="abstract-tags">
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="漏洞">漏洞</a>
     
 </div>
             
@@ -970,9 +972,40 @@ height:50vh;
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 12
+        Total : 13
         </div>
         <!-- search  -->
         
@@ -985,6 +1018,11 @@ height:50vh;
     
     <div class="archive-year"> 2018 </div>
     <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/11</span><a class="archive-post-title" href="/2018/11/11/堆溢出题目-bb-tacche/">山东省安全竞赛pwn题</a>
+        </li>
     
     
         <li class="archive-post-item">
@@ -1053,15 +1091,15 @@ height:50vh;
     
         <span class="sidebar-tag-name" data-tags="漏洞"><span class="iconfont-archer">&#xe606;</span>漏洞</span>
     
-        <span class="sidebar-tag-name" data-tags="java"><span class="iconfont-archer">&#xe606;</span>java</span>
-    
-        <span class="sidebar-tag-name" data-tags="资料"><span class="iconfont-archer">&#xe606;</span>资料</span>
-    
-        <span class="sidebar-tag-name" data-tags="题目"><span class="iconfont-archer">&#xe606;</span>题目</span>
+        <span class="sidebar-tag-name" data-tags="数据结构"><span class="iconfont-archer">&#xe606;</span>数据结构</span>
     
         <span class="sidebar-tag-name" data-tags="搭建"><span class="iconfont-archer">&#xe606;</span>搭建</span>
     
-        <span class="sidebar-tag-name" data-tags="数据结构"><span class="iconfont-archer">&#xe606;</span>数据结构</span>
+        <span class="sidebar-tag-name" data-tags="题目"><span class="iconfont-archer">&#xe606;</span>题目</span>
+    
+        <span class="sidebar-tag-name" data-tags="java"><span class="iconfont-archer">&#xe606;</span>java</span>
+    
+        <span class="sidebar-tag-name" data-tags="资料"><span class="iconfont-archer">&#xe606;</span>资料</span>
     
     </div>
     <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>

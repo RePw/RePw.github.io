@@ -351,8 +351,9 @@
                 <span>栈溢出之ROP基础</span>
         </a>
         <div class="abstract-content">
-            <p><strong><h1>0x00 前言</h1></strong><br>天真无知的我一直以为栈溢出是最简单的 以为结构简单 不像堆溢出那样杂乱无章 但学习了学习ROP之后 发现栈溢出姿势多<br>也不是那么简单! 本此做一个系列文章 后面会持续发布ROP其他姿势<br>
-        </p></div>
+            0x00 前言天真无知的我一直以为栈溢出是最简单的 以为结构简单 不像堆溢出那样杂乱无章 但学习了学习ROP之后 发现栈溢出姿势多也不是那么简单! 本此做一个系列文章 后面会持续发布ROP其他姿势0x01 栈溢出介绍所谓栈溢出就是在栈结构里一个数据溢出到栈里其他位置 导致其他位置的值被改变 从而达到攻击者自己想要的效果 先给大家看一下栈结构给大家举一个例子12345void fun(arg1,arg2)&#123;&#125;当这样的一个fun函数被调用时候1.先把arg2压入栈 再把啊arg1压入栈2.将ret返回地址压入栈3.函数里面其他内容
+栈是有长度的 而你输入数据如果没有长度限...
+        </div>
         <div class="abstract-post-meta">
             <!-- date  -->
             <div class="abstract-date">
@@ -380,8 +381,8 @@
                 <span>格式化字符串漏洞</span>
         </a>
         <div class="abstract-content">
-            <p><strong><h1>0x00 前言</h1></strong><br>这个漏洞刚开始在网上看到的 第一次没有看懂 后面找到一个博客上的例子 但还是没有调试成功 又问了团队的丁佬(Greenhand)<br>丁佬带我操作了一番 让我有了个了解 下面给大家细细讲解一下!<br>
-        </p></div>
+            0x00 前言这个漏洞刚开始在网上看到的 第一次没有看懂 后面找到一个博客上的例子 但还是没有调试成功 又问了团队的丁佬(Greenhand)丁佬带我操作了一番 让我有了个了解 下面给大家细细讲解一下!0x01 漏洞原理所谓格式化字符串是当你用prinft这种 需要格式化的输出语句时候 平常人可能会是printf(format,string)但也会有人为了省力气 printf(string) 但这样是不行的! 你不能将这个format的权限给别人 否则会导致格式化字符串漏洞 进而导致任务地址可写!!!先讲一下printf中format都有什么 都可以干什么这是printf压入栈中的顺序f...
+        </div>
         <div class="abstract-post-meta">
             <!-- date  -->
             <div class="abstract-date">
@@ -409,8 +410,8 @@
                 <span>uaf漏洞(use after free)在虚函数中的利用</span>
         </a>
         <div class="abstract-content">
-            <p><strong><h1>漏洞原理</h1></strong><br>   当应用程序调用free()释放内存时，如果内存块小于256kb，dlmalloc并不马上将内存块释放回内存，而是将内存块标记为空闲状态。<br>这么做的原因有两个：一是内存块不一定能马上释放会内核（比如内存块不是位于堆顶端），二是供应用程序下次申请内存使用（这是<br>主要原因）。当dlmalloc中空闲内存量达到一定值时dlmalloc才将空闲内存释放会内核。如果应用程序申请的内存大于256kb，dlmalloc<br>调用mmap()向内核申请一块内存，返回返还给应用程序使用。如果应用程序释放的内存大于256kb，dlmalloc马上调用munmap()释放内存。<br>dlmalloc不会缓存大于256kb的内存块，因为这样的内存块太大了，最好不要长期占用这么大的内存资源。<br>
-        </p></div>
+            漏洞原理   当应用程序调用free()释放内存时，如果内存块小于256kb，dlmalloc并不马上将内存块释放回内存，而是将内存块标记为空闲状态。这么做的原因有两个：一是内存块不一定能马上释放会内核（比如内存块不是位于堆顶端），二是供应用程序下次申请内存使用（这是主要原因）。当dlmalloc中空闲内存量达到一定值时dlmalloc才将空闲内存释放会内核。如果应用程序申请的内存大于256kb，dlmalloc调用mmap()向内核申请一块内存，返回返还给应用程序使用。如果应用程序释放的内存大于256kb，dlmalloc马上调用munmap()释放内存。dlmalloc不会缓存大于2...
+        </div>
         <div class="abstract-post-meta">
             <!-- date  -->
             <div class="abstract-date">
@@ -438,8 +439,8 @@
                 <span>CVE-2014-6271/Bash破壳漏洞/远程执行</span>
         </a>
         <div class="abstract-content">
-            <p>做题遇到的 直接了解了一下这个漏洞<br>CVE-2014-6271被当时微软评为10级漏洞 远程执行能力恐怖</p>
-<p></p><h2>影响版本</h2><br>Bash版本小于等于4.3版本<br>Red Hat Enterprise Linux 4 (ELS)<br>Red Hat Enterprise Linux 4 Extended Lifecycle Support - bash-3.0-27.el4.2<br>
+            做题遇到的 直接了解了一下这个漏洞CVE-2014-6271被当时微软评为10级漏洞 远程执行能力恐怖
+影响版本Bash版本小于等于4.3版本Red Hat Enterprise Linux 4 (ELS)Red Hat Enterprise Linux 4 Extended Lifecycle Support - bash-3.0-27.el4.2Red Hat Enterprise Linux 5 - bash-3.2-33.el5.1Red Hat Enterprise Linux 5.6 Long Life - bash-3.2-24.el5_6.1Red Hat Enterpr...
         </div>
         <div class="abstract-post-meta">
             <!-- date  -->
@@ -682,9 +683,40 @@
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 12
+        Total : 13
         </div>
         <!-- search  -->
         
@@ -697,6 +729,11 @@
     
     <div class="archive-year"> 2018 </div>
     <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/11</span><a class="archive-post-title" href="/2018/11/11/堆溢出题目-bb-tacche/">山东省安全竞赛pwn题</a>
+        </li>
     
     
         <li class="archive-post-item">
@@ -765,15 +802,15 @@
     
         <span class="sidebar-tag-name" data-tags="漏洞"><span class="iconfont-archer">&#xe606;</span>漏洞</span>
     
-        <span class="sidebar-tag-name" data-tags="java"><span class="iconfont-archer">&#xe606;</span>java</span>
-    
-        <span class="sidebar-tag-name" data-tags="资料"><span class="iconfont-archer">&#xe606;</span>资料</span>
-    
-        <span class="sidebar-tag-name" data-tags="题目"><span class="iconfont-archer">&#xe606;</span>题目</span>
+        <span class="sidebar-tag-name" data-tags="数据结构"><span class="iconfont-archer">&#xe606;</span>数据结构</span>
     
         <span class="sidebar-tag-name" data-tags="搭建"><span class="iconfont-archer">&#xe606;</span>搭建</span>
     
-        <span class="sidebar-tag-name" data-tags="数据结构"><span class="iconfont-archer">&#xe606;</span>数据结构</span>
+        <span class="sidebar-tag-name" data-tags="题目"><span class="iconfont-archer">&#xe606;</span>题目</span>
+    
+        <span class="sidebar-tag-name" data-tags="java"><span class="iconfont-archer">&#xe606;</span>java</span>
+    
+        <span class="sidebar-tag-name" data-tags="资料"><span class="iconfont-archer">&#xe606;</span>资料</span>
     
     </div>
     <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
