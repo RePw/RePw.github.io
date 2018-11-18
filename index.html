@@ -359,6 +359,37 @@ height:50vh;
     
     
     <article class="index-post">
+        <a class="abstract-title" href="/2018/11/18/湖湘杯Replace题解/">
+            
+                <span>湖湘杯Replace题解</span>
+        </a>
+        <div class="abstract-content">
+            0x00 前言题目来自湖湘杯 Reverse  Replace 题目不算太难但是逻辑很复杂
+0x00 关键点寻找先把文件脱壳 带入IDA中看
+里面有个重点输入buf必须是35长度进入sub_401090函数看看12345678910111213141516171819202122232425262728293031323334353637383940signed int __fastcall sub_401090(int a1, int a2)&#123;  int v2; // ebx  int v4; // edx  char v5; // al  int v6; // esi  i...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/11/18</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class="abstract-tags">
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="题目">题目</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
         <a class="abstract-title" href="/2018/11/11/山东省安全竞赛pwn题/">
             
                 <span>山东省安全竞赛pwn题</span>
@@ -611,35 +642,6 @@ KMP是三位大牛：D.E.Knuth、J.H.Morris和V.R.Pratt同时发现的。其中�
             <div class="abstract-tags">
     
         <a class="post-tag" href="javascript:void(0);" data-tags="java">java</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href="/2018/10/14/uaf漏洞-use-after-free/">
-            
-                <span>uaf漏洞(use after free)在虚函数中的利用</span>
-        </a>
-        <div class="abstract-content">
-            漏洞原理   当应用程序调用free()释放内存时，如果内存块小于256kb，dlmalloc并不马上将内存块释放回内存，而是将内存块标记为空闲状态。这么做的原因有两个：一是内存块不一定能马上释放会内核（比如内存块不是位于堆顶端），二是供应用程序下次申请内存使用（这是主要原因）。当dlmalloc中空闲内存量达到一定值时dlmalloc才将空闲内存释放会内核。如果应用程序申请的内存大于256kb，dlmalloc调用mmap()向内核申请一块内存，返回返还给应用程序使用。如果应用程序释放的内存大于256kb，dlmalloc马上调用munmap()释放内存。dlmalloc不会缓存大于2...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/10/14</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class="abstract-tags">
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="漏洞">漏洞</a>
     
 </div>
             
@@ -964,9 +966,50 @@ KMP是三位大牛：D.E.Knuth、J.H.Morris和V.R.Pratt同时发现的。其中�
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 12
+        Total : 13
         </div>
         <!-- search  -->
         
@@ -979,6 +1022,11 @@ KMP是三位大牛：D.E.Knuth、J.H.Morris和V.R.Pratt同时发现的。其中�
     
     <div class="archive-year"> 2018 </div>
     <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/18</span><a class="archive-post-title" href="/2018/11/18/湖湘杯Replace题解/">湖湘杯Replace题解</a>
+        </li>
     
     
         <li class="archive-post-item">
@@ -1045,15 +1093,15 @@ KMP是三位大牛：D.E.Knuth、J.H.Morris和V.R.Pratt同时发现的。其中�
         <div class="sidebar-panel-tags">
     <div class="sidebar-tags-name">
     
-        <span class="sidebar-tag-name" data-tags="漏洞"><span class="iconfont-archer">&#xe606;</span>漏洞</span>
+        <span class="sidebar-tag-name" data-tags="题目"><span class="iconfont-archer">&#xe606;</span>题目</span>
     
-        <span class="sidebar-tag-name" data-tags="数据结构"><span class="iconfont-archer">&#xe606;</span>数据结构</span>
+        <span class="sidebar-tag-name" data-tags="漏洞"><span class="iconfont-archer">&#xe606;</span>漏洞</span>
     
         <span class="sidebar-tag-name" data-tags="搭建"><span class="iconfont-archer">&#xe606;</span>搭建</span>
     
         <span class="sidebar-tag-name" data-tags="java"><span class="iconfont-archer">&#xe606;</span>java</span>
     
-        <span class="sidebar-tag-name" data-tags="题目"><span class="iconfont-archer">&#xe606;</span>题目</span>
+        <span class="sidebar-tag-name" data-tags="数据结构"><span class="iconfont-archer">&#xe606;</span>数据结构</span>
     
         <span class="sidebar-tag-name" data-tags="资料"><span class="iconfont-archer">&#xe606;</span>资料</span>
     
