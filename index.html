@@ -359,14 +359,45 @@ height:50vh;
     
     
     <article class="index-post">
+        <a class="abstract-title" href="/2018/11/25/湖南安全竞赛fmtstr题/">
+            
+                <span>湖南安全竞赛fmtstr题</span>
+        </a>
+        <div class="abstract-content">
+            知识点1.查偏移写入 64位前6个参数是存在6个寄存器里 所有gdb查到的位置需要+62.写入最好分段写入不要一次性写入太多 否则会崩溃exp
+
+123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657585960616263#!/usr/bin/python# -*- coding: utf-8 -*-from pwn import *#文件加载#context.log_level = 'debug'io = process('./a...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/11/25</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class="abstract-tags">
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="题目">题目</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
         <a class="abstract-title" href="/2018/11/21/0CTF-babyheap题解/">
             
                 <span>0CTF-babyheap题解</span>
         </a>
         <div class="abstract-content">
-            0x00 介绍堆经典利用题 后面有时间再补0x00 方法1.如何leak地址2.如何执行Shellexp
+            知识点1.small chunk释放时候fd bk指到main_arena的0x58出 main_arena存在libc段2.small chunk加入fastbin时候需要修改size位过检测3.malloc_hook检测申请堆 平常0 不为0先执行里面的内容exp
 
-123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657585960616263646566676869707172737475767778798081828384858687888990919293949596979899100101102103104105106107108109110111112113114115#!/usr...
+12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455565758596061626364656667686970717273747576777879808182838485...
         </div>
         <div class="abstract-post-meta">
             <!-- date  -->
@@ -617,35 +648,6 @@ KMP是三位大牛：D.E.Knuth、J.H.Morris和V.R.Pratt同时发现的。其中�
             <div class="abstract-tags">
     
         <a class="post-tag" href="javascript:void(0);" data-tags="数据结构">数据结构</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href="/2018/10/17/学习资源/">
-            
-                <span>学习资料共享</span>
-        </a>
-        <div class="abstract-content">
-            所有学习资料仅供大家学习!DDos攻击原理 https://www.cnblogs.com/2myroad/articles/3881042.htmlWireshark数据包分析 https://blog.csdn.net/qicheng777/article/details/74452136Z-shell安装教程 https://blog.csdn.net/scythe666/article/details/52000098gcc编译介绍(如何取消保护)https://blog.csdn.net/ZNYCSO/article/details/82839743gdb使用方法https:/...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/10/17</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class="abstract-tags">
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="资料">资料</a>
     
 </div>
             
@@ -1045,9 +1047,10 @@ KMP是三位大牛：D.E.Knuth、J.H.Morris和V.R.Pratt同时发现的。其中�
     
     
     
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 15
+        Total : 16
         </div>
         <!-- search  -->
         
@@ -1060,6 +1063,11 @@ KMP是三位大牛：D.E.Knuth、J.H.Morris和V.R.Pratt同时发现的。其中�
     
     <div class="archive-year"> 2018 </div>
     <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/25</span><a class="archive-post-title" href="/2018/11/25/湖南安全竞赛fmtstr题/">湖南安全竞赛fmtstr题</a>
+        </li>
     
     
         <li class="archive-post-item">
@@ -1145,13 +1153,13 @@ KMP是三位大牛：D.E.Knuth、J.H.Morris和V.R.Pratt同时发现的。其中�
     
         <span class="sidebar-tag-name" data-tags="漏洞"><span class="iconfont-archer">&#xe606;</span>漏洞</span>
     
-        <span class="sidebar-tag-name" data-tags="数据结构"><span class="iconfont-archer">&#xe606;</span>数据结构</span>
-    
         <span class="sidebar-tag-name" data-tags="搭建"><span class="iconfont-archer">&#xe606;</span>搭建</span>
     
         <span class="sidebar-tag-name" data-tags="java"><span class="iconfont-archer">&#xe606;</span>java</span>
     
         <span class="sidebar-tag-name" data-tags="资料"><span class="iconfont-archer">&#xe606;</span>资料</span>
+    
+        <span class="sidebar-tag-name" data-tags="数据结构"><span class="iconfont-archer">&#xe606;</span>数据结构</span>
     
     </div>
     <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
