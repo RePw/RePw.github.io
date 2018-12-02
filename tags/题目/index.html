@@ -346,6 +346,38 @@
     
     
     <article class="index-post">
+        <a class="abstract-title" href="/2018/12/02/NCTF-部分Pwn题/">
+            
+                <span>NCTF-部分Pwn题</span>
+        </a>
+        <div class="abstract-content">
+            0x00 babystack
+知识点    通过vsyscall来bypass    vsyscall只能从调用开始的地方开始 vsdo可以任意位置exp
+
+123456789101112131415161718from pwn import *p=process('./babystack')payload = 'a'*24 + p64(0xffffffffff600000)*2#0xffffffffff600000为vsyscall起始地址 vmmap可查到vsyscall#前24字节是溢出覆盖到ebp 后接ret不过连续调用了'''00:0000│ rsp  0x7fffffffe4...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/12/02</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class="abstract-tags">
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="题目">题目</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
         <a class="abstract-title" href="/2018/11/25/湖南安全竞赛fmtstr题/">
             
                 <span>湖南安全竞赛fmtstr题</span>
@@ -816,9 +848,30 @@
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 16
+        Total : 17
         </div>
         <!-- search  -->
         
@@ -831,6 +884,11 @@
     
     <div class="archive-year"> 2018 </div>
     <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/02</span><a class="archive-post-title" href="/2018/12/02/NCTF-部分Pwn题/">NCTF-部分Pwn题</a>
+        </li>
     
     
         <li class="archive-post-item">
@@ -919,6 +977,8 @@
     
         <span class="sidebar-tag-name" data-tags="题目"><span class="iconfont-archer">&#xe606;</span>题目</span>
     
+        <span class="sidebar-tag-name" data-tags="数据结构"><span class="iconfont-archer">&#xe606;</span>数据结构</span>
+    
         <span class="sidebar-tag-name" data-tags="漏洞"><span class="iconfont-archer">&#xe606;</span>漏洞</span>
     
         <span class="sidebar-tag-name" data-tags="搭建"><span class="iconfont-archer">&#xe606;</span>搭建</span>
@@ -926,8 +986,6 @@
         <span class="sidebar-tag-name" data-tags="java"><span class="iconfont-archer">&#xe606;</span>java</span>
     
         <span class="sidebar-tag-name" data-tags="资料"><span class="iconfont-archer">&#xe606;</span>资料</span>
-    
-        <span class="sidebar-tag-name" data-tags="数据结构"><span class="iconfont-archer">&#xe606;</span>数据结构</span>
     
     </div>
     <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
