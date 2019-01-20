@@ -346,177 +346,27 @@
     
     
     <article class="index-post">
-        <a class="abstract-title" href="/2018/11/25/湖南安全竞赛fmtstr题/">
+        <a class="abstract-title" href="/2019/01/20/ssr搭建-科学翻墙/">
             
-                <span>湖南安全竞赛fmtstr题</span>
+                <span>ssr搭建 科学翻墙</span>
         </a>
         <div class="abstract-content">
-            知识点1.查偏移写入 64位前6个参数是存在6个寄存器里 所有gdb查到的位置需要+62.写入最好分段写入不要一次性写入太多 否则会崩溃exp
+            科学上网搭建之间先说明：禁止使用ssr做一些违法的事情，向他人出售也是犯法的！！！！
+ssr搭建
+vultr购买国外服务器
 
-123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657585960616263#!/usr/bin/python# -*- coding: utf-8 -*-from pwn import *#文件加载#context.log_level = 'debug'io = process('./a...
+自己注册登陆，这点不说啥点击左边的billing有各种购买方式 自己选择微信或者支付宝付款就可以这点最只能充值10美元 自己可以考虑和别人合租 比较划算点击右边的加号有各个国家的服务器 不同系统服务器 价格也不同我们服务器就选择默认的Centos7就行 价格选择3.5美元一个月的2.5美元的事only IPv6是不行的 服务器呢最好选择日本 其次是Los Angeles最后把Enable IPv6和Enable Private Networking勾选上 就可以D...
         </div>
         <div class="abstract-post-meta">
             <!-- date  -->
             <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/11/25</span>
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/01/20</span>
             </div>
             <!-- tags  -->
             
             <div class="abstract-tags">
     
-        <a class="post-tag" href="javascript:void(0);" data-tags="题目">题目</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href="/2018/11/21/0CTF-babyheap题解/">
-            
-                <span>0CTF-babyheap题解</span>
-        </a>
-        <div class="abstract-content">
-            知识点1.small chunk释放时候fd bk指到main_arena的0x58出 main_arena存在libc段2.small chunk加入fastbin时候需要修改size位过检测3.malloc_hook检测申请堆 平常0 不为0先执行里面的内容exp
-
-12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455565758596061626364656667686970717273747576777879808182838485...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/11/21</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class="abstract-tags">
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="题目">题目</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href="/2018/11/20/湖湘杯2018-Regex-Format/">
-            
-                <span>湖湘杯2018-Regex Format</span>
-        </a>
-        <div class="abstract-content">
-            0x00 前言hxb2018题目 pwn1-Regex  Format赛时没有做出来 听师傅们说用IO_FILE文件劫持流 赛后学习了学习只能说学到姿势比赛都没用到 一比赛就有新姿势..0x01 IO_FILE_stdout
-
-这点我不用多详细介绍.. CTF-WIKI中有详细的介绍https://ctf-wiki.github.io/ctf-wiki/pwn/linux/io_file/introduction/我们主要讲一下这个如何使用这个漏洞方法 FILE文件结构是12345struct _IO_FILE_plus&#123;    _IO_FILE    file;    IO_...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/11/20</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class="abstract-tags">
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="题目">题目</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href="/2018/11/18/湖湘杯Replace题解/">
-            
-                <span>湖湘杯Replace题解</span>
-        </a>
-        <div class="abstract-content">
-            0x00 前言题目来自湖湘杯 Reverse  Replace 题目不算太难但是逻辑很复杂
-0x01 关键点寻找先把文件脱壳 带入IDA中看
-里面有个重点输入buf必须是35长度进入sub_401090函数看看12345678910111213141516171819202122232425262728293031323334353637383940signed int __fastcall sub_401090(int a1, int a2)&#123;  int v2; // ebx  int v4; // edx  char v5; // al  int v6; // esi  i...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/11/18</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class="abstract-tags">
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="题目">题目</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href="/2018/11/11/山东省安全竞赛pwn题/">
-            
-                <span>山东省安全竞赛pwn题</span>
-        </a>
-        <div class="abstract-content">
-            0x00 堆溢出:bb_tcache山大的题目 第一次接触堆的题目 以前只是看过堆溢出unlink相关的知识山大题目连接http://47.105.148.65:4000/login?next=%2Fchallenges先简短解释下这道题堆题用到的知识malloc_hook堆钩1malloc_hook是在调用malloc函数之前检查的地方，正常情况下该地址下的值为0，如果该内存不为0，则会在malloc前先执行malloc_hook中的地址的内容 也就是说如果我们在这块内存写入one_gadget，就会在malloc前执行one_gadget。每次调用堆的申请 释放等函数时候实际会先执行...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/11/11</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class="abstract-tags">
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="题目">题目</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href="/2018/11/01/ROP之ret2libc/">
-            
-                <span>ROP之ret2libc</span>
-        </a>
-        <div class="abstract-content">
-            0x00 前言CTF-WIKI种给出的原理ret2libc原理:如果我们知道 libc 中某个函数的地址，那么我们就可以确定该程序利用的 libc。进而我们就可以知道 system 函数的地址。那么如何得到 libc 中的某个函数的地址呢？我们一般常用的方法是采用 got 表泄露，即输出某个函数对应的 got 表项的内容。当然，由于 libc 的延迟绑定机制，我们需要泄漏已经执行过的函数的地址。我们自然可以根据上面的步骤先得到 libc，之后在程序中查询偏移，然后再次获取 system 地址
-自己理解:就是通过OGT表leak出已经执行的函数地址 通过这个函数地址找到libc的基地 再通...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/11/01</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class="abstract-tags">
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="题目">题目</a>
+        <a class="post-tag" href="javascript:void(0);" data-tags="搭建">搭建</a>
     
 </div>
             
